@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/loreanvictor/connect-firestore#readme",
   "dependencies": {
+    "@google-cloud/firestore": "^0.16.0",
     "connect-platform": "^0.2.4"
   }
 }
