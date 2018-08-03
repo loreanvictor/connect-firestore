@@ -1,7 +1,7 @@
 {
-  "name": "connect-platform-package-boilerplate",
-  "version": "1.0.0",
-  "description": "the boilerplate project for CONNECT platform packages.",
+  "name": "connect-firestore",
+  "version": "0.0.1",
+  "description": "firestore binding for CONNECT platform",
   "main": ".",
   "scripts": {
     "start": "node app",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/loreanvictor/connect-platform-package-boilerplate.git"
+    "url": "git+https://github.com/loreanvictor/connect-firestore.git"
   },
   "author": "Eugene Ghanizadeh Khoub <ghanizadeh.eugene@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/loreanvictor/connect-platform-package-boilerplate/issues"
+    "url": "https://github.com/loreanvictor/connect-firestore/issues"
   },
-  "homepage": "https://github.com/loreanvictor/connect-platform-package-boilerplate#readme",
+  "homepage": "https://github.com/loreanvictor/connect-firestore#readme",
   "dependencies": {
     "connect-platform": "^0.2.4"
   }
