@@ -32,7 +32,7 @@ module.exports.platform = {
     setup: "This is how you setup CONNECT firestore.",
     sampleConfig: {
       project: "your-firestore-project-name",
-      keyfile: "firestore.key"
+      keyfile: "firestore.json"
     }
   }
 }
