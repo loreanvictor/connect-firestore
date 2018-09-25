@@ -27,5 +27,12 @@ module.exports.platform = {
       '/db/search/limit': '/firestore/search/limit',
       '/db/search/offset': '/firestore/search/offset',
     }
+  },
+  hints: {
+    setup: "This is how you setup CONNECT firestore.",
+    sampleConfig: {
+      project: "your-firestore-project-name",
+      keyfile: "firestore.key"
+    }
   }
 }
