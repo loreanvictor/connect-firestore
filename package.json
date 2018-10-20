@@ -4,7 +4,7 @@
   "description": "firestore binding for CONNECT platform",
   "main": ".",
   "scripts": {
-    "start": "node app",
+    "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +19,9 @@
   "homepage": "https://github.com/loreanvictor/connect-firestore#readme",
   "dependencies": {
     "@google-cloud/firestore": "^0.16.0",
-    "connect-platform": "^0.2.4"
+    "connect-platform": "^0.2.7"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
   }
 }
