@@ -18,10 +18,13 @@
   },
   "homepage": "https://github.com/loreanvictor/connect-firestore#readme",
   "dependencies": {
-    "@google-cloud/firestore": "^0.16.0",
-    "connect-platform": "^0.2.7"
+    "@google-cloud/firestore": "^0.16.0"
+  },
+  "peerDependencies": {
+    "connect-platform": "*"
   },
   "devDependencies": {
-    "nodemon": "^1.18.4"
+    "nodemon": "^1.18.4",
+    "connect-platform": "^0.2.7"
   }
 }
