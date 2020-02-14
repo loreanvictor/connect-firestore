@@ -1,10 +1,10 @@
 {
   "name": "connect-firestore",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "firestore binding for CONNECT platform",
   "main": ".",
   "scripts": {
-    "start": "node app",
+    "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,8 +18,13 @@
   },
   "homepage": "https://github.com/loreanvictor/connect-firestore#readme",
   "dependencies": {
-    "@google-cloud/firestore": "^0.16.1",
-    "connect-mailjet": "git+https://github.com/must/connect-mailjet.git",
-    "connect-platform": "^0.2.5"
+    "@google-cloud/firestore": "^0.16.0"
+  },
+  "peerDependencies": {
+    "connect-platform": "*"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4",
+    "connect-platform": "^0.2.7"
   }
 }

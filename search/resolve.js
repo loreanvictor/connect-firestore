@@ -11,7 +11,7 @@ platform.core.node({
 }, (inputs, output, control) => {
   if (instance) {
     inputs.query.get().then(snapshot => {
-      output('result', snapshot.docs.map(doc => doc.data()));
+      output('result', snapshot.docs.map(doc => ({ _id: doc.id, ...doc.data() })));
     }).catch(error => {
       output('db_error', error.details);
     });
