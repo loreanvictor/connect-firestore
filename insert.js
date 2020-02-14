@@ -18,6 +18,7 @@ platform.core.node({
           output('id', doc.id);
         });
     } catch(error) {
+      console.log(error);
       control('bad_input');
     }
   }
