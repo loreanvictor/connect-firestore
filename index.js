@@ -2,6 +2,7 @@ module.exports.platform = {
   config : {
     nodes : {
       native : [
+        'firestore',
         'timestamp',
         'insert',
         'update',
@@ -16,6 +17,7 @@ module.exports.platform = {
       ]
     },
     aliases: {
+      '/db/firestore': '/firestore/firestore',
       '/db/insert': '/firestore/insert',
       '/db/server/timestamp': '/firestore/server/timestamp',
       '/db/update': '/firestore/update',
