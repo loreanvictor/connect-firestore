@@ -7,6 +7,7 @@ module.exports.platform = {
         'insert',
         'update',
         'get',
+        'getSnapshot',
         'delete',
         'search/search',
         'search/resolve',
@@ -14,6 +15,7 @@ module.exports.platform = {
         'search/sort',
         'search/limit',
         'search/offset',
+        'search/startAfter',
       ]
     },
     aliases: {
@@ -22,6 +24,7 @@ module.exports.platform = {
       '/db/server/timestamp': '/firestore/server/timestamp',
       '/db/update': '/firestore/update',
       '/db/get': '/firestore/get',
+      '/db/getSnapshot': '/firestore/getSnapshot',
       '/db/delete': '/firestore/delete',
 
       '/db/search': '/firestore/search',
@@ -30,6 +33,7 @@ module.exports.platform = {
       '/db/search/sort': '/firestore/search/sort',
       '/db/search/limit': '/firestore/search/limit',
       '/db/search/offset': '/firestore/search/offset',
+      '/db/search/startAfter': '/firestore/search/startAfter',
     }
   },
   hints: {
