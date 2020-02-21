@@ -5,6 +5,7 @@ module.exports.platform = {
         'firestore',
         'timestamp',
         'insert',
+        'set',
         'update',
         'get',
         'getSnapshot',
@@ -21,6 +22,7 @@ module.exports.platform = {
     aliases: {
       '/db/firestore': '/firestore/firestore',
       '/db/insert': '/firestore/insert',
+      '/db/set': '/firestore/set',
       '/db/server/timestamp': '/firestore/server/timestamp',
       '/db/update': '/firestore/update',
       '/db/get': '/firestore/get',
