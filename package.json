@@ -4,7 +4,7 @@
   "description": "firestore binding for CONNECT platform",
   "main": ".",
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "node -r dotenv/config app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,6 +25,7 @@
     "connect-platform": "*"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "nodemon": "^1.18.4",
     "connect-platform": "^0.2.7"
   }
