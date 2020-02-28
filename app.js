@@ -68,6 +68,30 @@ try {
 
 /**
  *
+ * lets try to run the config script set by the panel.
+ *
+ */
+try {
+  require('./panel-generated/platform-config.script');
+} catch(err) {}
+
+/**
+ *
+ * it would be weird if this was useful, but lets also load the prod config
+ * set by the panel if the environment variable is given. this is just to keep
+ * the testing environment of the package and actual instances as close to each other
+ * as possible.
+ *
+ */
+try {
+  if (process.env.CONNECT_PRODUCTION_MODE) {
+    let prodconf = require('./panel-generated/platform-config.prod');
+    platform.configure(prodconf);
+  }
+} catch(err) {}
+
+/**
+ *
  * this is probably useful only if you want to test your package
  * in secrecy on some always online panel somewhere.
  *
