@@ -1,6 +1,7 @@
 const platform = require('connect-platform');
 const instance = require('./instance');
-const client = require('./cache/redis');
+
+const cache = require('./cache/redis');
 const formater = require('./util/formater');
 
 platform.core.node({
@@ -13,7 +14,7 @@ platform.core.node({
   if (instance) {
     const key = formater.format(inputs.collection, inputs.id);
 
-    client.hjget(key, 'get')
+    cache.hjget(key, 'get')
     .then((res) => {
       if(res != null) {
         output('data', res);
@@ -27,9 +28,10 @@ platform.core.node({
       .get();
     }).then(snapshot => {
       if (snapshot.exists) {
-        client.hjset(key, 'get', snapshot.data())
+        const data = { _id: inputs.id, ...snapshot.data() };
+        cache.hjset(key, 'get', data)
         .then((res) => {
-          output('data', snapshot.data());
+          output('data', data);
         })
         .catch((err) => {
           control('Caching error');
