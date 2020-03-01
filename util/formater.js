@@ -14,8 +14,8 @@ const formater = {
     }
   },
   format: function(collection, id = "") {
-    const collectionWithoutSlash = collection.replace(/^\/|\/$/g, '');
-    const idWithoutSlash = id.replace(/^\/|\/$/g, '');
+    const collectionWithoutSlash = this.removeTrailingSlashes(collection);
+    const idWithoutSlash = this.removeTrailingSlashes(id);
 
     return collectionWithoutSlash + '/' + idWithoutSlash;
   }
