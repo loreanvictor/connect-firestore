@@ -14,7 +14,7 @@ platform.core.node({
   if (instance) {
     const key = formater.format(inputs.collection, inputs.id);
 
-    cache.hjget(key, 'get')
+    cache.jget(key)
     .then((res) => {
       if(res != null) {
         output('data', res);
@@ -29,7 +29,7 @@ platform.core.node({
     }).then(snapshot => {
       if (snapshot.exists) {
         const data = { _id: inputs.id, ...snapshot.data() };
-        cache.hjset(key, 'get', data)
+        cache.jset(key, data)
         .then((res) => {
           output('data', data);
         })
