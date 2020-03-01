@@ -28,8 +28,6 @@ const jsonClient = {
       .then((res) => {
         if(res != null) {
           const jsonObject = JSON.parse(res);
-          
-          console.log('From cache:', jsonObject);
 
           resolve(jsonObject);
         } else {
@@ -54,8 +52,6 @@ const jsonClient = {
 
       func.apply(this, params)
       .then((res) => {
-        console.log('Cached:', params[0], '=', value);
-        
         resolve(res);
       })
       .catch((err) => {
