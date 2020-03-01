@@ -1,6 +1,8 @@
 const platform = require('connect-platform');
 const instance = require('./instance');
 
+const formater = require('./util/formater');
+const cache = require('./cache/redis');
 
 platform.core.node({
   path: '/firestore/delete',
@@ -14,8 +16,16 @@ platform.core.node({
       .collection(inputs.collection)
       .doc(inputs.id)
       .delete()
-      .then(() => {
+      .then((res) => {
+        const key = formater.format(inputs.collection, inputs.id);
+
+        cache.markMissing(key)
+        .then((res) => {
           control('done');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       });
   }
   else control('no_connection');

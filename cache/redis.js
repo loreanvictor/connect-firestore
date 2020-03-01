@@ -10,26 +10,34 @@ if (config.cache_enabled) {
 
 const client = instance.client;
 
-const hgetAsync = promisify(client.hget).bind(client);
-const hsetAsync = promisify(client.hset).bind(client);
+const Async = {
+  hget: promisify(client.hget).bind(client),
+  hset: promisify(client.hset).bind(client),
 
-const getAsync = promisify(client.get).bind(client);
-const setAsync = promisify(client.set).bind(client);
+  get: promisify(client.get).bind(client),
+  set: promisify(client.set).bind(client)
+};
 
 const jsonClient = {
+  CONSTANTS: {
+    NONE_EXISTING: 'non_existing'
+  },
   jgetfunc: function(func, params) {
     return new Promise((resolve, reject) => {
       if(! config.cache_enabled) {
         resolve(null);
         return ;
       }
-
+      
       func.apply(this, params)
       .then((res) => {
         if(res != null) {
-          const jsonObject = JSON.parse(res);
+          let returnVal = this.CONSTANTS.NONE_EXISTING;
+          if(res !== this.CONSTANTS.NONE_EXISTING) {
+            returnVal = JSON.parse(res);
+          }
 
-          resolve(jsonObject);
+          resolve(returnVal);
         } else {
           resolve(null);
         }
@@ -41,16 +49,46 @@ const jsonClient = {
   },
   jsetfunc: function(func, params) {
     return new Promise((resolve, reject) => {
+      const ival = params.length - 1;
+      const value = params[ival];
+
+      if(! config.cache_enabled) {
+        resolve(value);
+        return ;
+      }
+
+      if(value !== this.CONSTANTS.NONE_EXISTING)
+        params[ival] = JSON.stringify(value);
+
+      func.apply(this, params)
+      .then((res) => {
+        resolve(value);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+    });
+  },
+  hjget: function(key, field) {
+    return this.jgetfunc(Async.hget, [key, field]);
+  },
+  hjset: function(key, field, value) {
+    return this.jsetfunc(Async.hset, [key, field, value]);
+  },
+  jget: function(key) {
+    return this.jgetfunc(Async.get, [key]);
+  },
+  jset: function(key, value) {
+    return this.jsetfunc(Async.set, [key, value]);
+  },
+  del: function(key) {
+    return new Promise((resolve, reject) => {
       if(! config.cache_enabled) {
         resolve(null);
         return ;
       }
 
-      const ival = params.length - 1;
-      const value = params[ival];
-      params[ival] = JSON.stringify(value);
-
-      func.apply(this, params)
+      Async.del(key)
       .then((res) => {
         resolve(res);
       })
@@ -59,17 +97,8 @@ const jsonClient = {
       });
     });
   },
-  hjget: function(key, field) {
-    return this.jgetfunc(hgetAsync, [key, field]);
-  },
-  hjset: function(key, field, value) {
-    return this.jsetfunc(hsetAsync, [key, field, value]);
-  },
-  jget: function(key) {
-    return this.jgetfunc(getAsync, [key]);
-  },
-  jset: function(key, value) {
-    return this.jsetfunc(setAsync, [key, value]);
+  markMissing: function(key) {
+    return this.jset(key, this.CONSTANTS.NONE_EXISTING);
   }
 };
 

@@ -19,7 +19,7 @@
   "homepage": "https://github.com/loreanvictor/connect-firestore#readme",
   "dependencies": {
     "@google-cloud/firestore": "^3.5.1",
-    "connect-platform-redis": "0.0.3"
+    "connect-platform-redis": "0.0.5"
   },
   "peerDependencies": {
     "connect-platform": "*"

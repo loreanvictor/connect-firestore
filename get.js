@@ -17,7 +17,11 @@ platform.core.node({
     cache.jget(key)
     .then((res) => {
       if(res != null) {
-        output('data', res);
+        if(res == cache.CONSTANTS.NONE_EXISTING) {
+          control('not_found');
+        } else {
+          output('data', res);
+        }
         
         return Promise.reject('Result from cache');
       }
@@ -30,15 +34,16 @@ platform.core.node({
     .then(snapshot => {
       if (snapshot.exists) {
         const data = { _id: inputs.id, ...snapshot.data() };
-        cache.jset(key, data)
-        .then((res) => {
-          output('data', data);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+        return cache.jset(key, data);
       } else {
+        return cache.markMissing(key);
+      }
+    })
+    .then((data) => {
+      if(data == cache.CONSTANTS.NONE_EXISTING) {
         control('not_found');
+      } else {
+        output('data', data);
       }
     })
     .catch((err) => {
