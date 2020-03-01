@@ -18,7 +18,7 @@ platform.core.node({
     .then((res) => {
       if(res != null) {
         output('data', res);
-
+        
         return Promise.reject('Result from cache');
       }
 
@@ -26,7 +26,8 @@ platform.core.node({
       .collection(inputs.collection)
       .doc(inputs.id)
       .get();
-    }).then(snapshot => {
+    })
+    .then(snapshot => {
       if (snapshot.exists) {
         const data = { _id: inputs.id, ...snapshot.data() };
         cache.jset(key, data)
@@ -34,7 +35,6 @@ platform.core.node({
           output('data', data);
         })
         .catch((err) => {
-          control('Caching error');
           console.error(err);
         });
       } else {
@@ -42,7 +42,6 @@ platform.core.node({
       }
     })
     .catch((err) => {
-      control('Caching error');
       console.error(err);
     });
   }
