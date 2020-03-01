@@ -1,9 +1,19 @@
 
 const formater = {
-  removeTrailingSlashes: (key) => {
+  removeTrailingSlashes: function(key) {
     return key.replace(/^\/|\/$/g, '');
   },
-  format: (collection, id = "") => {
+  getComponents: function(key) {
+    const components = key.split("/");
+    const id = components.pop();
+    const collection = components.join("/");
+
+    return {
+      id: id,
+      collection: collection
+    }
+  },
+  format: function(collection, id = "") {
     const collectionWithoutSlash = collection.replace(/^\/|\/$/g, '');
     const idWithoutSlash = id.replace(/^\/|\/$/g, '');
 

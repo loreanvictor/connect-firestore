@@ -5,8 +5,6 @@ const cache = require('./cache/redis');
 const formater = require('./util/formater');
 
 function merge(originalObject, newObject) {
-  console.log(originalObject);
-  console.log(newObject);
   return {
     ...originalObject,
     ...newObject
@@ -28,28 +26,23 @@ platform.core.node({
         .then(res => {
           const key = formater.removeTrailingSlashes(inputs.doc);
 
-          cache.hjget(key, 'get')
+          cache.jget(key)
           .then((res) => {
-            if(res == null) {
-              const components = key.split("/");
-              const id = components.pop();
-              const collection = components.join("/");
+            const docObj = formater.getComponents(key);
 
-              platform.call('/firestore/get', {
-                collection: collection,
-                id: id
-              }).then((res) => {
-                cache.hjset(key, 'get', merge(res.data, inputs.data));
+            if(res == null) {
+              platform.call('/firestore/get', docObj).then((res) => {
+                cache.jset(key, merge(res.data, inputs.data));
               });
             } else {
-              cache.hjset(key, 'get', merge(res, inputs.data));
+              cache.jset(key, merge(res, inputs.data));
 
               return Promise.reject('Result from cache');
             }
 
             return instance
-            .collection(inputs.collection)
-            .doc(inputs.id)
+            .collection(docObj.collection)
+            .doc(docObj.id)
             .get();
           });
 
