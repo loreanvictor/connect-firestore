@@ -1,6 +1,8 @@
 const platform = require('connect-platform');
 const instance = require('./instance');
 
+const cache = require('./cache/redis');
+const formater = require('./util/formater');
 
 platform.core.node({
   path: '/firestore/insert',
@@ -15,6 +17,9 @@ platform.core.node({
         .collection(inputs.collection)
         .add(inputs.data)
         .then(doc => {
+          const key = formater.format(inputs.collection, doc.id);
+          
+          cache.jset(key, { _id: doc.id, ...inputs.data });
           output('id', doc.id);
         });
     } catch(error) {
