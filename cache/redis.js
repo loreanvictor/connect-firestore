@@ -13,15 +13,18 @@ const client = instance.client;
 const hgetAsync = promisify(client.hget).bind(client);
 const hsetAsync = promisify(client.hset).bind(client);
 
+const getAsync = promisify(client.get).bind(client);
+const setAsync = promisify(client.set).bind(client);
+
 const jsonClient = {
-  hjget: (key, field) => {
+  jgetfunc: function(func, params) {
     return new Promise((resolve, reject) => {
       if(! config.cache_enabled) {
         resolve(null);
         return ;
       }
 
-      hgetAsync(key, field)
+      func.apply(this, params)
       .then((res) => {
         if(res != null) {
           const jsonObject = JSON.parse(res);
@@ -38,18 +41,20 @@ const jsonClient = {
       });
     });
   },
-  hjset: (key, field, value) => {
+  jsetfunc: function(func, params) {
     return new Promise((resolve, reject) => {
       if(! config.cache_enabled) {
         resolve(null);
         return ;
       }
 
-      const jsonString = JSON.stringify(value);
+      const ival = params.length - 1;
+      const value = params[ival];
+      params[ival] = JSON.stringify(value);
 
-      hsetAsync(key, field, jsonString)
+      func.apply(this, params)
       .then((res) => {
-        console.log('Cached:', key, '=', value);
+        console.log('Cached:', params[0], '=', value);
         
         resolve(res);
       })
@@ -57,6 +62,18 @@ const jsonClient = {
         reject(err);
       });
     });
+  },
+  hjget: function(key, field) {
+    return this.jgetfunc(hgetAsync, [key, field]);
+  },
+  hjset: function(key, field, value) {
+    return this.jsetfunc(hsetAsync, [key, field, value]);
+  },
+  jget: function(key) {
+    return this.jgetfunc(getAsync, [key]);
+  },
+  jset: function(key, value) {
+    return this.jsetfunc(setAsync, [key, value]);
   }
 };
 
