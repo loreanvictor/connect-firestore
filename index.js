@@ -51,8 +51,9 @@ Then,<br><br>
 5) copy the content of the private key you generated in the content field of the new key
 6) add a sample config like this. the project field should be the same as <span class="hl-teal">project_id</span> field of your key. the keyfile field is the name of the key you created in your vault.`,
     sampleConfig: {
-      project: "your-firestore-project-name",
-      keyfile: "firestore.json"
+      "project": "your-firestore-project-name",
+      "keyfile": "firestore.json",
+      "cache_enabled": false
     }
   }
 }
