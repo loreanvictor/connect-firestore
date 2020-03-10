@@ -5,8 +5,6 @@ const cache = require('./cache/redis');
 const formater = require('./util/formater');
 const deep = require('./util/deep');
 
-const Firestore = require('@google-cloud/firestore');
-
 platform.core.node({
   path: '/firestore/insert',
   public: false,
