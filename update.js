@@ -3,6 +3,7 @@ const instance = require('./instance');
 
 const cache = require('./cache/redis');
 const formater = require('./util/formater');
+const deep = require('./util/deep');
 
 const merge = require('./util/merge');
 
@@ -15,6 +16,7 @@ platform.core.node({
 }, (inputs, output, control) => {
   if (instance) {
     try {
+      console.log(Object.assign({}, inputs.data));
       instance
         .collection(inputs.collection)
         .doc(inputs.id)
@@ -28,18 +30,23 @@ platform.core.node({
 
             if(res == null) {
               platform.call('/firestore/get', docObj).then((res) => {
-                cache.jset(key, merge(res.data, inputs.data, true));
+                cache.jset(key, res.data);
               });
             } else {
-              cache.jset(key, merge(res, inputs.data, true));
+              const hasTimestamp = deep(inputs.data, el => el.constructor.name === 'ServerTimestampTransform');
 
-              return Promise.reject('Result from cache');
+              if(hasTimestamp) {
+                cache.del(key);
+              } else {
+                cache.jset(key, merge(res, inputs.data, true));
+              }
             }
 
             return Promise.resolve(0);
           });
         })
         .then(() => {
+          console.log('done');
           control('done');
         })
         .catch(error => {
