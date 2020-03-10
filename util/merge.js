@@ -41,7 +41,7 @@ function getDotNotationObject(newObject) {
         }
         previousPart = previousPart[slice];
       }
-      console.log(key, newObject[key]);
+      
       delete newObject[key];
     }
   }
