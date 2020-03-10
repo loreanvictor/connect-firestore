@@ -3,6 +3,9 @@ const instance = require('./instance');
 
 const cache = require('./cache/redis');
 const formater = require('./util/formater');
+const deep = require('./util/deep');
+
+const Firestore = require('@google-cloud/firestore');
 
 platform.core.node({
   path: '/firestore/insert',
@@ -19,7 +22,16 @@ platform.core.node({
         .then(doc => {
           const key = formater.format(inputs.collection, doc.id);
           
-          cache.jset(key, { _id: doc.id, ...inputs.data });
+          const hasTimestamp = deep(inputs.data, (el) => {
+            return el.constructor.name === 'ServerTimestampTransform';
+          });
+
+          if(! hasTimestamp) {
+            cache.jset(key, { _id: doc.id, ...inputs.data });
+          }
+
+          cache.del(inputs.collection);
+
           output('id', doc.id);
         });
     } catch(error) {
