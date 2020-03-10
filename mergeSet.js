@@ -3,13 +3,7 @@ const instance = require('./instance');
 
 const cache = require('./cache/redis');
 const formater = require('./util/formater');
-
-function merge(originalObject, newObject) {
-  return {
-    ...originalObject,
-    ...newObject
-  };
-}
+const merge = require('./util/merge');
 
 platform.core.node({
   path: '/firestore/mergeSet',
