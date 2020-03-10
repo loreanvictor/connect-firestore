@@ -5,8 +5,6 @@ const cache = require('./cache/redis');
 const formater = require('./util/formater');
 const deep = require('./util/deep');
 
-const Firestore = require('@google-cloud/firestore');
-
 platform.core.node({
   path: '/firestore/set',
   public: false,
@@ -31,7 +29,7 @@ platform.core.node({
           } else {
             cache.jset(key, { _id: inputs.id, ...inputs.data });
           }
-          
+
           output('res', res);
         });
     } catch(error) {
