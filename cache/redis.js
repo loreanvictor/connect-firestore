@@ -16,7 +16,9 @@ const Async = {
 
   get: promisify(client.get).bind(client),
   set: promisify(client.set).bind(client),
-  expire: promisify(client.expire).bind(client)
+  expire: promisify(client.expire).bind(client),
+  
+  del: promisify(client.del).bind(client)
 };
 
 const jsonClient = {
