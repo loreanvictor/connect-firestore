@@ -16,7 +16,6 @@ platform.core.node({
 }, (inputs, output, control) => {
   if (instance) {
     try {
-      console.log(Object.assign({}, inputs.data));
       instance
         .collection(inputs.collection)
         .doc(inputs.id)
@@ -46,7 +45,6 @@ platform.core.node({
           });
         })
         .then(() => {
-          console.log('done');
           control('done');
         })
         .catch(error => {
