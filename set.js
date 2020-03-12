@@ -29,6 +29,9 @@ platform.core.node({
           } else {
             cache.jset(key, { _id: inputs.id, ...inputs.data });
           }
+          
+          const components = formater.getComponents(key);
+          cache.del(components.collection);
 
           output('res', res);
         });

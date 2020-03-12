@@ -20,10 +20,10 @@ platform.core.node({
         .then(res => {
           const key = formater.removeTrailingSlashes(inputs.doc);
 
+          const docObj = formater.getComponents(key);
+
           cache.jget(key)
           .then((res) => {
-            const docObj = formater.getComponents(key);
-
             if(res == null) {
               platform.call('/firestore/get', docObj).then((res) => {
                 cache.jset(key, merge(res.data, inputs.data));
@@ -40,6 +40,7 @@ platform.core.node({
             .get();
           });
 
+          cache.del(docObj.collection);
           output('res', res);
         });
     } catch(error) {

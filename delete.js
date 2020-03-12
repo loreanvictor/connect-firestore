@@ -21,6 +21,8 @@ platform.core.node({
 
         cache.markMissing(key)
         .then((res) => {
+          cache.del(inputs.collection);
+          
           control('done');
         })
         .catch((err) => {

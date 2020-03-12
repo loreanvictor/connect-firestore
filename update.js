@@ -45,6 +45,8 @@ platform.core.node({
           });
         })
         .then(() => {
+          cache.del(inputs.collection);
+          
           control('done');
         })
         .catch(error => {

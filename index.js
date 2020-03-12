@@ -19,6 +19,11 @@ module.exports.platform = {
         'search/offset',
         'search/startAfter',
         'search/startAfterId',
+        'cache/invalidate/collection',
+        'cache/invalidate/doc',
+        'cache/expire/collection',
+        'cache/expire/doc',
+        'getInstance',
       ]
     },
     aliases: {
@@ -40,6 +45,12 @@ module.exports.platform = {
       '/db/search/offset': '/firestore/search/offset',
       '/db/search/startAfter': '/firestore/search/startAfter',
       '/db/search/startAfterId': '/firestore/search/startAfterId',
+
+      '/db/cache/invalidate/collection': '/firestore/cache/invalidate/collection',
+      '/db/cache/invalidate/doc': '/firestore/cache/invalidate/doc',
+      '/db/cache/expire/collection': '/firestore/cache/expire/collection',
+      '/db/cache/expire/doc': '/firestore/cache/expire/doc',
+      '/db/getInstance': '/firestore/getInstance',
     }
   },
   hints: {

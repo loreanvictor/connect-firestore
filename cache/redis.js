@@ -102,6 +102,9 @@ const jsonClient = {
   },
   markMissing: function(key) {
     return this.jset(key, this.CONSTANTS.NONE_EXISTING);
+  },
+  expire: function(key, ttl) {
+    return Async.expire(key, ttl);
   }
 };
 
