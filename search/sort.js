@@ -11,8 +11,18 @@ platform.core.node({
 }, (inputs, output, control) => {
   if (instance) {
     let direction = 'asc';
-    if (inputs.direction == 'descending') direction = 'desc';
-    output('sorted', inputs.query.orderBy(inputs.field, direction));
+    if ( ['descending', 'desc'].includes(inputs.direction) ) direction = 'desc';
+
+    const query = {
+      firestore: inputs.query.firestore.orderBy(inputs.field, direction),
+      cache: { ...inputs.query.cache }
+    };
+
+    if( ! ( 'sort' in query.cache ) ) query.cache.sort = [];
+    
+    query.cache.sort.push([inputs.field, direction]);
+    
+    output('sorted', query);
   }
   else control('no_connection');
 });

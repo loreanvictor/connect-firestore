@@ -10,7 +10,16 @@ platform.core.node({
   controlOutputs: ['no_connection'],
 }, (inputs, output, control) => {
   if (instance) {
-    output('startedAfter', inputs.query.startAfter(inputs.snapshot));
+    const query = {
+      firestore: inputs.query.firestore.startAfter(inputs.snapshot),
+      cache: { ...inputs.query.cache }
+    };
+    console.log(inputs.snapshot);
+    query.cache['startAfter'] = inputs.snapshot.id;
+
+    console.log(query.cache);
+
+    output('startedAfter', query);
   }
   else control('no_connection');
 });

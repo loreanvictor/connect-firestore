@@ -18,6 +18,7 @@ module.exports.platform = {
         'search/limit',
         'search/offset',
         'search/startAfter',
+        'search/startAfterId',
       ]
     },
     aliases: {
@@ -38,6 +39,7 @@ module.exports.platform = {
       '/db/search/limit': '/firestore/search/limit',
       '/db/search/offset': '/firestore/search/offset',
       '/db/search/startAfter': '/firestore/search/startAfter',
+      '/db/search/startAfterId': '/firestore/search/startAfterId',
     }
   },
   hints: {

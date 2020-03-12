@@ -10,7 +10,14 @@ platform.core.node({
   controlOutputs: ['no_connection'],
 }, (inputs, output, control) => {
   if (instance) {
-    output('query', instance.collection(inputs.collection));
+    output('query',
+      {
+        firestore: instance.collection(inputs.collection),
+        cache: {
+          collection: inputs.collection
+        }
+      }
+    );
   }
   else control('no_connection');
 });

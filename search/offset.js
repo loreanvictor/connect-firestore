@@ -10,7 +10,14 @@ platform.core.node({
   controlOutputs: ['no_connection'],
 }, (inputs, output, control) => {
   if (instance) {
-    output('offsetted', inputs.query.offset(inputs.offset));
+    const query = {
+      firestore: inputs.query.firestore.offset(parseInt(inputs.offset)),
+      cache: { ...inputs.query.cache }
+    };
+
+    query.cache['offset'] = parseInt(inputs.offset);
+
+    output('offsetted', query);
   }
   else control('no_connection');
 });

@@ -10,7 +10,16 @@ platform.core.node({
   controlOutputs: ['no_connection'],
 }, (inputs, output, control) => {
   if (instance) {
-    output('filtered', inputs.query.where(inputs.field, inputs.op, inputs.value));
+    const query = {
+      firestore: inputs.query.firestore.where(inputs.field, inputs.op, inputs.value),
+      cache: { ...inputs.query.cache }
+    };
+
+    if( ! ( 'where' in query.cache ) ) query.cache.where = [];
+
+    query.cache.where.push([inputs.field, inputs.op, inputs.value]);
+
+    output('filtered', query);
   }
   else control('no_connection');
 });
