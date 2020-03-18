@@ -14,10 +14,8 @@ platform.core.node({
       firestore: inputs.query.firestore.startAfter(inputs.snapshot),
       cache: { ...inputs.query.cache }
     };
-    console.log(inputs.snapshot);
-    query.cache['startAfter'] = inputs.snapshot.id;
 
-    console.log(query.cache);
+    query.cache['startAfter'] = inputs.snapshot.id;
 
     output('startedAfter', query);
   }
