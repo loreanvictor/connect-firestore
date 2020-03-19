@@ -11,7 +11,7 @@ platform.core.node({
   public: false,
   inputs: ['query'],
   outputs: ['result', 'db_error'],
-  controlOutputs: ['no_connection'],
+  controlOutputs: ['not_found', 'no_connection'],
 }, (inputs, output, control) => {
   if (instance) {
     const collection = formater.removeTrailingSlashes(inputs.query.cache.collection);
@@ -27,6 +27,15 @@ platform.core.node({
       
       if('afterId' in inputs.query) {
         return platform.call('/firestore/getSnapshot', { collection: collection, id: inputs.query.afterId }).then((res) => {
+          if(
+            ('control' in res) &&
+            res.control === 'not_found'
+          ) {
+            control('not_found');
+
+            return Promise.reject(1);
+          }
+
           return inputs
           .query
           .firestore
