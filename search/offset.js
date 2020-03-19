@@ -11,8 +11,8 @@ platform.core.node({
 }, (inputs, output, control) => {
   if (instance) {
     const query = {
-      firestore: inputs.query.firestore.offset(parseInt(inputs.offset)),
-      cache: { ...inputs.query.cache }
+      ...inputs.query,
+      firestore: inputs.query.firestore.offset(parseInt(inputs.offset))
     };
 
     query.cache['offset'] = parseInt(inputs.offset);

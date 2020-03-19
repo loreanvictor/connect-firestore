@@ -11,8 +11,8 @@ platform.core.node({
 }, (inputs, output, control) => {
   if (instance) {
     const query = {
-      firestore: inputs.query.firestore.where(inputs.field, inputs.op, inputs.value),
-      cache: { ...inputs.query.cache }
+      ...inputs.query,
+      firestore: inputs.query.firestore.where(inputs.field, inputs.op, inputs.value)
     };
 
     if( ! ( 'where' in query.cache ) ) query.cache.where = [];

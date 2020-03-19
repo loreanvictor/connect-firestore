@@ -11,8 +11,8 @@ platform.core.node({
 }, (inputs, output, control) => {
   if (instance) {
     const query = {
-      firestore: inputs.query.firestore.limit(parseInt(inputs.limit)),
-      cache: { ...inputs.query.cache }
+      ...inputs.query,
+      firestore: inputs.query.firestore.limit(parseInt(inputs.limit))
     };
 
     query.cache['limit'] = parseInt(inputs.limit);

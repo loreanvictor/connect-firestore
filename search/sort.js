@@ -14,8 +14,8 @@ platform.core.node({
     if ( ['descending', 'desc'].includes(inputs.direction) ) direction = 'desc';
 
     const query = {
-      firestore: inputs.query.firestore.orderBy(inputs.field, direction),
-      cache: { ...inputs.query.cache }
+      ...inputs.query,
+      firestore: inputs.query.firestore.orderBy(inputs.field, direction)
     };
 
     if( ! ( 'sort' in query.cache ) ) query.cache.sort = [];

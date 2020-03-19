@@ -16,10 +16,10 @@ platform.core.node({
   if (instance) {
     const collection = formater.removeTrailingSlashes(inputs.query.cache.collection);
     const h = hash(inputs.query.cache);
-
+    
     cache.hjget(collection, h)
     .then((res) => {
-      if(res != null) {
+      if(res !== null) {
         output('result', res);
         
         return Promise.reject('Result from cache');
