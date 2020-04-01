@@ -1,25 +1,41 @@
 const platform = require('connect-platform');
-const instance = require('connect-platform-redis/instance');
 const { promisify } = require("util");
 
 const config = platform.config.get('firestore', { "cache_enabled": false });
 
-if (config.cache_enabled) {
-  console.info("Firestore caching through redis is enabled.");
+function emptyPromise() {
+  return Promise.resolve(0);
 }
 
-const client = instance.client;
+let Async = {
+  hget: emptyPromise(),
+  hset: emptyPromise(),
 
-const Async = {
-  hget: promisify(client.hget).bind(client),
-  hset: promisify(client.hset).bind(client),
-
-  get: promisify(client.get).bind(client),
-  set: promisify(client.set).bind(client),
-  expire: promisify(client.expire).bind(client),
+  get: emptyPromise(),
+  set: emptyPromise(),
+  expire: emptyPromise(),
   
-  del: promisify(client.del).bind(client)
+  del: emptyPromise()
 };
+
+if (config.cache_enabled) {
+  console.info("Firestore caching through redis is enabled.");
+
+  const instance = require('connect-platform-redis/instance');
+
+  const client = instance.client;
+
+  Async = {
+    hget: promisify(client.hget).bind(client),
+    hset: promisify(client.hset).bind(client),
+
+    get: promisify(client.get).bind(client),
+    set: promisify(client.set).bind(client),
+    expire: promisify(client.expire).bind(client),
+    
+    del: promisify(client.del).bind(client)
+  };
+}
 
 const jsonClient = {
   CONSTANTS: {

@@ -1,6 +1,6 @@
 {
   "name": "connect-firestore",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "firestore binding for CONNECT platform",
   "main": ".",
   "scripts": {
@@ -19,7 +19,7 @@
   "homepage": "https://github.com/loreanvictor/connect-firestore#readme",
   "dependencies": {
     "@google-cloud/firestore": "^3.5.1",
-    "connect-platform-redis": "0.0.5",
+    "connect-platform-redis": "0.0.6",
     "object-hash": "^2.0.3"
   },
   "peerDependencies": {
