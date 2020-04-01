@@ -3,21 +3,21 @@ const instance = require('../instance');
 
 
 platform.core.node({
-  path: '/firestore/search/offset',
+  path: '/firestore/search/startAfter',
   public: false,
-  inputs: ['query', 'offset'],
-  outputs: ['offsetted'],
+  inputs: ['query', 'snapshot'],
+  outputs: ['startedAfter'],
   controlOutputs: ['no_connection'],
 }, (inputs, output, control) => {
   if (instance) {
     const query = {
       ...inputs.query,
-      firestore: inputs.query.firestore.offset(parseInt(inputs.offset))
+      firestore: inputs.query.firestore.startAfter(inputs.snapshot)
     };
 
-    query.cache['offset'] = parseInt(inputs.offset);
+    query.cache['startAfter'] = inputs.snapshot.id;
 
-    output('offsetted', query);
+    output('startedAfter', query);
   }
   else control('no_connection');
 });

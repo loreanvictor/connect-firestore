@@ -10,7 +10,14 @@ platform.core.node({
   controlOutputs: ['no_connection'],
 }, (inputs, output, control) => {
   if (instance) {
-    output('limited', inputs.query.limit(inputs.limit));
+    const query = {
+      ...inputs.query,
+      firestore: inputs.query.firestore.limit(parseInt(inputs.limit))
+    };
+
+    query.cache['limit'] = parseInt(inputs.limit);
+    
+    output('limited', query);
   }
   else control('no_connection');
 });
