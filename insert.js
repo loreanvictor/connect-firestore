@@ -5,6 +5,8 @@ const cache = require('./cache/redis');
 const formater = require('./util/formater');
 const deep = require('./util/deep');
 
+const { normalize_arrays } = require('./util/normalize');
+
 platform.core.node({
   path: '/firestore/insert',
   public: false,
@@ -14,6 +16,8 @@ platform.core.node({
 }, (inputs, output, control) => {
   if (instance) {
     try {
+      normalize_arrays(inputs.data);
+      
       instance
         .collection(inputs.collection)
         .add(inputs.data)
