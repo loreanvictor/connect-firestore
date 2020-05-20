@@ -5,6 +5,8 @@ const cache = require('./cache/redis');
 const formater = require('./util/formater');
 const merge = require('./util/merge');
 
+const { normalize_arrays } = require('./util/normalize');
+
 platform.core.node({
   path: '/firestore/mergeSet',
   public: false,
@@ -14,6 +16,8 @@ platform.core.node({
 }, (inputs, output, control) => {
   if (instance) {
     try {
+      normalize_arrays(inputs.data);
+      
       instance
         .doc(inputs.doc)
         .set(inputs.data, {merge: true})

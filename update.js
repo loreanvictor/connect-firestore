@@ -7,6 +7,8 @@ const deep = require('./util/deep');
 
 const merge = require('./util/merge');
 
+const { normalize_arrays } = require('./util/normalize');
+
 platform.core.node({
   path: '/firestore/update',
   public: false,
@@ -16,6 +18,8 @@ platform.core.node({
 }, (inputs, output, control) => {
   if (instance) {
     try {
+      normalize_arrays(inputs.data);
+
       instance
         .collection(inputs.collection)
         .doc(inputs.id)
