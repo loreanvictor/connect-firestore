@@ -7,6 +7,8 @@ const merge = require('./util/merge');
 
 const { normalize_arrays } = require('./util/normalize');
 
+const { hasServerSetProperties } = require('./util/checks');
+
 platform.core.node({
   path: '/firestore/mergeSet',
   public: false,
@@ -18,34 +20,45 @@ platform.core.node({
     try {
       normalize_arrays(inputs.data);
       
+      const key = formater.removeTrailingSlashes(inputs.doc);
+      const docObj = formater.getComponents(key);
+      let firebaseResult = null;
+      let refreshData = false;
       instance
         .doc(inputs.doc)
         .set(inputs.data, {merge: true})
         .then(res => {
-          const key = formater.removeTrailingSlashes(inputs.doc);
+          firebaseResult = res;
 
-          const docObj = formater.getComponents(key);
+          if( hasServerSetProperties(inputs.data) ) {
+            return cache.del(key);
+          }
 
-          cache.jget(key)
-          .then((res) => {
-            if(res == null) {
-              platform.call('/firestore/get', docObj).then((res) => {
-                cache.jset(key, merge(res.data, inputs.data));
-              });
-            } else {
-              cache.jset(key, merge(res, inputs.data));
+          return true;
+        })
+        .then(() => {
+          return cache.jget(key);
+        })
+        .then((cacheRes) => {
+          if(cacheRes === null) {
+            refreshData = true;
 
-              return Promise.reject('Result from cache');
-            }
+            return platform.call('/firestore/get', docObj).then((res) => res.data);
+          } else {
+            return cacheRes;
+          }
+        })
+        .then ((res) => {
+          if(refreshData) {
+            return res;
+          }
 
-            return instance
-            .collection(docObj.collection)
-            .doc(docObj.id)
-            .get();
-          });
-
-          cache.del(docObj.collection);
-          output('res', res);
+          return cache.jset(key, merge(res, inputs.data));
+        })
+        .then((res) => {
+          return cache.del(docObj.collection);
+        }).then((res) => {
+          output('res', firebaseResult);
         });
     } catch(error) {
       console.log(error);
