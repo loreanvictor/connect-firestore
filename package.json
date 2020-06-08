@@ -1,6 +1,6 @@
 {
   "name": "connect-firestore",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "firestore binding for CONNECT platform",
   "main": ".",
   "scripts": {

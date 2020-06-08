@@ -21,32 +21,30 @@ platform.core.node({
     try {
       normalize_arrays(inputs.data);
 
+      const key = formater.format(inputs.collection, inputs.id);
+
       instance
         .collection(inputs.collection)
         .doc(inputs.id)
         .update(Object.assign({}, inputs.data))
-        .then(() => {
-          const key = formater.format(inputs.collection, inputs.id);
+        .then(() => cache.jget(key))
+        .then((res) => {
+          const docObj = formater.getComponents(key);
 
-          cache.jget(key)
-          .then((res) => {
-            const docObj = formater.getComponents(key);
-
-            let returnPromise = null;
-            if(res == null) {
-              returnPromise = platform.call('/firestore/get', docObj).then((res) => {
-                cache.jset(key, res.data);
-              });
+          let returnPromise = null;
+          if(res == null) {
+            returnPromise = platform.call('/firestore/get', docObj).then((res) => {
+              return cache.jset(key, res.data);
+            });
+          } else {
+            if( hasServerSetProperties(inputs.data) ) {
+              returnPromise = cache.del(key);
             } else {
-              if( hasServerSetProperties(inputs.data) ) {
-                returnPromise = cache.del(key);
-              } else {
-                returnPromise = cache.jset(key, merge(res, inputs.data, true));
-              }
+              returnPromise = cache.jset(key, merge(res, inputs.data, true));
             }
+          }
 
-            return returnPromise;
-          });
+          return returnPromise;
         })
         .then(() => {
           cache.del(inputs.collection);
