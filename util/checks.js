@@ -4,7 +4,13 @@ function hasServerSetProperties(data) {
   return deep(
     data,
     el =>
-      [ 'ServerTimestampTransform' ].containers(el.constructor.name)
+      [
+        'ServerTimestampTransform',
+        'NumericIncrementTransform',
+        'DeleteTransform',
+        'ArrayUnionTransform',
+        'ArrayRemoveTransform'
+      ].includes(el.constructor.name)
   );
 }
 
