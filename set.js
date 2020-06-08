@@ -3,7 +3,8 @@ const instance = require('./instance');
 
 const cache = require('./cache/redis');
 const formater = require('./util/formater');
-const deep = require('./util/deep');
+
+const { hasServerSetProperties } = require('./util/checks');
 
 const { normalize_arrays } = require('./util/normalize');
 
@@ -17,27 +18,32 @@ platform.core.node({
   if (instance) {
     try {
       normalize_arrays(inputs.data);
-
+      
       instance
         .doc(inputs.doc)
         .set(inputs.data)
         .then(res => {
           const key = formater.removeTrailingSlashes(inputs.doc);
-          
-          const hasTimestamp = deep(inputs.data, (el) => {
-            return el.constructor.name === 'ServerTimestampTransform';
-          });
 
-          if(hasTimestamp) {
-            cache.del(key);
+          const promises = [ res ];
+          if( hasServerSetProperties(inputs.data) ) {
+            promises.push(
+              cache.del(key)
+            );
           } else {
-            cache.jset(key, { _id: inputs.id, ...inputs.data });
+            promises.push(
+              cache.jset(key, { _id: inputs.id, ...inputs.data })
+            );
           }
           
           const components = formater.getComponents(key);
-          cache.del(components.collection);
+          promises.push(
+            cache.del(components.collection)
+          );
 
-          output('res', res);
+          return Promise.all(promises);
+        }).then((res) => {
+          output('res', res[0]);
         });
     } catch(error) {
       console.log(error);

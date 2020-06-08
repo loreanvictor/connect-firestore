@@ -3,9 +3,10 @@ const instance = require('./instance');
 
 const cache = require('./cache/redis');
 const formater = require('./util/formater');
-const deep = require('./util/deep');
 
 const merge = require('./util/merge');
+
+const { hasServerSetProperties } = require('./util/checks');
 
 const { normalize_arrays } = require('./util/normalize');
 
@@ -31,21 +32,20 @@ platform.core.node({
           .then((res) => {
             const docObj = formater.getComponents(key);
 
+            let returnPromise = null;
             if(res == null) {
-              platform.call('/firestore/get', docObj).then((res) => {
+              returnPromise = platform.call('/firestore/get', docObj).then((res) => {
                 cache.jset(key, res.data);
               });
             } else {
-              const hasTimestamp = deep(inputs.data, el => el.constructor.name === 'ServerTimestampTransform');
-
-              if(hasTimestamp) {
-                cache.del(key);
+              if( hasServerSetProperties(inputs.data) ) {
+                returnPromise = cache.del(key);
               } else {
-                cache.jset(key, merge(res, inputs.data, true));
+                returnPromise = cache.jset(key, merge(res, inputs.data, true));
               }
             }
 
-            return Promise.resolve(0);
+            return returnPromise;
           });
         })
         .then(() => {

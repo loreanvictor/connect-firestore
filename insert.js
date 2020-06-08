@@ -7,6 +7,8 @@ const deep = require('./util/deep');
 
 const { normalize_arrays } = require('./util/normalize');
 
+const { hasServerSetProperties } = require('./util/checks');
+
 platform.core.node({
   path: '/firestore/insert',
   public: false,
@@ -17,22 +19,28 @@ platform.core.node({
   if (instance) {
     try {
       normalize_arrays(inputs.data);
-      
+
       instance
         .collection(inputs.collection)
         .add(inputs.data)
         .then(doc => {
           const key = formater.format(inputs.collection, doc.id);
-          
-          const hasTimestamp = deep(inputs.data, (el) => {
-            return el.constructor.name === 'ServerTimestampTransform';
-          });
 
-          if(! hasTimestamp) {
-            cache.jset(key, { _id: doc.id, ...inputs.data });
+          const promises = [ doc ];
+          if(! hasServerSetProperties(inputs.data) ) {
+            promises.push(
+              cache.jset(key, { _id: doc.id, ...inputs.data })
+            );
           }
 
-          cache.del(inputs.collection);
+          promises.push(
+            cache.del(inputs.collection)
+          );
+
+          return Promise.all(promises);
+        })
+        .then((res) => {
+          const doc = res[0];
 
           output('id', doc.id);
         });
